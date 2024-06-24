@@ -40,10 +40,10 @@ volatile bool QS = false;
 
 int main_state = -1;
 int adc_value = 0;
-bool freezeDisplay = false; // Flag to freeze the display after calculating the average BPM
-int bpm_readings[15]; // Array to store BPM readings
-int bpm_index = 0; // Index to keep track of BPM readings
-bool bpm_sampling_complete = false; // Flag to indicate completion of BPM sampling
+bool freezeDisplay = false; 
+int bpm_readings[15]; 
+int bpm_index = 0; 
+bool bpm_sampling_complete = false; 
 
 void system_init(void);
 void calculate_heart_beat(int adc_value);
@@ -51,8 +51,8 @@ void calculate_heart_beat(int adc_value);
 void main() {
     system_init();
     main_state = READ_ADC;
-    int avg_bpm_sum = 0; // Variable to store the sum of BPM readings
-    int avg_bpm_count = 0; // Variable to count the number of BPM readings
+    int avg_bpm_sum = 0;
+    int avg_bpm_count = 0; 
     
     while (1) {
         switch (main_state) {
@@ -69,7 +69,7 @@ void main() {
             case SHOW_HEART_BEAT: {
                 if (QS == true && !freezeDisplay) { 
                     QS = false;
-                    lcd_com(0x80); // Move to the first line
+                    lcd_com(0x80); 
                     lcd_puts("Calc BPM: ");
                     lcd_print_number(BPM);
                     lcd_puts(" ");
@@ -82,30 +82,30 @@ void main() {
                         }
                     }
 
-                    // Add the BPM to the sum and increment the count
+                    
                     avg_bpm_sum += BPM;
                     avg_bpm_count++;
                 }
 
                 // Check if 30 seconds have passed
                 if (sampleCounter > 30000) {
-                    // Calculate the average BPM
+                    
                     int avg_bpm = avg_bpm_sum / avg_bpm_count;
 
-                    // Display the average BPM on the LCD
+                    
                     lcd_com(0xC0); // Move to the second line
                     lcd_puts("Avg BPM: ");
                     lcd_print_number(avg_bpm);
                     lcd_puts(" ");
 
-                    // Reset the variables for the next calculation
+                    
                     avg_bpm_sum = 0;
                     avg_bpm_count = 0;
 
-                    // Freeze the display
+                    
                     freezeDisplay = true;
 
-                    // Move to the IDLE state
+                   
                     main_state = IDLE;
                 }
                 break;
